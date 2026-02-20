@@ -36,16 +36,15 @@ namespace TerminalBibliotek
 
             connection.Execute(@"
            IF NOT EXISTS 
-           (SELECT 1 FROM sys.tables WHERE name = 'Library')
+                 (SELECT 1 FROM sys.tables WHERE name = 'Library')
     
-        CREATE TABLE Library (
-            AuthorId INT NOT NULL,
-            BookId INT NOT NULL,
-            PRIMARY KEY (AuthorId, BookId),
-            FOREIGN KEY (AuthorId) REFERENCES Authors(Id),
-            FOREIGN KEY (BookId) REFERENCES Books(Id)       
-    
-);");
+                   CREATE TABLE Library (
+                           Id INT IDENTITY(1,1) PRIMARY KEY,
+                           AuthorId INT NOT NULL,
+                           BookId INT NOT NULL,
+                           PRIMARY KEY (AuthorId, BookId),
+                           FOREIGN KEY (AuthorId) REFERENCES Authors(Id),
+                           FOREIGN KEY (BookId) REFERENCES Books(Id));");
 
             if (args.Length >= 3 &&
                 (args[0].Equals("add", StringComparison.OrdinalIgnoreCase) ||
