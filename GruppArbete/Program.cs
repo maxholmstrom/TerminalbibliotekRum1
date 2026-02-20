@@ -22,6 +22,28 @@ namespace TerminalBibliotek
                         END");
             connection.Query<string>("SELECT Name FROM Authors");
 
+            if (args.Length >= 3 &&
+                (args[0].Equals("add", StringComparison.OrdinalIgnoreCase) ||
+                 args[0].Equals("a", StringComparison.OrdinalIgnoreCase)) &&
+                 args[1].Equals("author", StringComparison.OrdinalIgnoreCase) ||
+                 args[1].Equals("a", StringComparison.OrdinalIgnoreCase))
+            {
+                string name = string.Join(" ", args.Skip(2)).Trim();
+
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    Console.WriteLine("Du måste ange ett namn.");
+                    return;
+                }
+
+                connection.Execute(
+                    "INSERT INTO Authors (Name) VALUES (@Name)",
+                    new { Name = name });
+
+                Console.WriteLine("Författare tillagd.");
+            }
+
+
         }
     }
 }
