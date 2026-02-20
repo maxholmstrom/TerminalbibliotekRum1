@@ -127,7 +127,7 @@ namespace TerminalBibliotek
                     args[1].Equals("book", StringComparison.OrdinalIgnoreCase) ||
                     args[1].Equals("b", StringComparison.OrdinalIgnoreCase)) &&
                     ((args[2].Equals("--authors", StringComparison.OrdinalIgnoreCase)) ||
-                    args[2].Equals("-a", StringComparison.OrdinalIgnoreCase)))
+                    args[2].Equals("--a", StringComparison.OrdinalIgnoreCase)))
             {
                 var lists = connection.Query<AuthorBook>(@"
                     SELECT 
@@ -150,6 +150,7 @@ namespace TerminalBibliotek
                     foreach (var author in book)
                     { Console.WriteLine($" - {author.AuthorName}"); }
                 }
+                return;
             }
 
             if (args.Length >= 3 &&
