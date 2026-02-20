@@ -190,7 +190,7 @@ namespace TerminalBibliotek
                     "SELECT Id FROM Authors WHERE Name = @Name",
                     new { Name = authorName });
                 var book = connection.QueryFirstOrDefault<Book>(
-                    "SELECT Id FROM Books WHERE Name = @Name",
+                    "INSERT INTO Books (Name) VALUES (@Name);",
                     new { Name = bookTitle });
                 if (author == null)
                     {
