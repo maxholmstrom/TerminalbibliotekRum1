@@ -118,14 +118,6 @@ namespace TerminalBibliotek
                 }
             }
 
-
-
-
-
-
-
-
-
             // Ta bort författare
             else if (args.Length == 3 &&
                 (args[0].Equals("delete", StringComparison.OrdinalIgnoreCase) ||
@@ -149,7 +141,6 @@ namespace TerminalBibliotek
                 }
             }
             // Ta bort bok
-
             else if (args.Length == 3 &&
                 (args[0].Equals("delete", StringComparison.OrdinalIgnoreCase) ||
                  args[0].Equals("d", StringComparison.OrdinalIgnoreCase)) &&
@@ -171,8 +162,18 @@ namespace TerminalBibliotek
                     Console.WriteLine("Bok borttagen.");
                 }
             }
-
-
+            connection.Execute(@"
+           IF NOT EXISTS 
+           (SELECT 1 FROM sys.tables WHERE name = 'Library')
+    
+        CREATE TABLE Library (
+            AuthorId INT NOT NULL,
+            BookId INT NOT NULL,
+            PRIMARY KEY (AuthorId, BookId),
+            FOREIGN KEY (AuthorId) REFERENCES Authors(Id),
+            FOREIGN KEY (BookId) REFERENCES Books(Id)       
+    
+);");       
 
         }
         public class Author
