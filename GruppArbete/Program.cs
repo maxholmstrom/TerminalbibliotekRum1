@@ -126,7 +126,7 @@ namespace TerminalBibliotek
 
 
 
-
+            // Ta bort författare
             else if (args.Length == 3 &&
                 (args[0].Equals("delete", StringComparison.OrdinalIgnoreCase) ||
                  args[0].Equals("d", StringComparison.OrdinalIgnoreCase)) &&
@@ -148,8 +148,29 @@ namespace TerminalBibliotek
                     Console.WriteLine("Författare borttagen.");
                 }
             }
+            // Ta bort bok
 
+            else if (args.Length == 3 &&
+                (args[0].Equals("delete", StringComparison.OrdinalIgnoreCase) ||
+                 args[0].Equals("d", StringComparison.OrdinalIgnoreCase)) &&
+                (args[1].Equals("book", StringComparison.OrdinalIgnoreCase) ||
+                 args[1].Equals("b", StringComparison.OrdinalIgnoreCase)))
+            {
+                var booksName = args[2];
 
+                var rowsAffected = connection.Execute(
+                    "DELETE FROM Books WHERE Name = @Name",
+                    new { Name = booksName });
+
+                if (rowsAffected == 0)
+                {
+                    Console.WriteLine("Ingen bok hittades.");
+                }
+                else
+                {
+                    Console.WriteLine("Bok borttagen.");
+                }
+            }
 
 
 
