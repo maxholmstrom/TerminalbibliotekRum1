@@ -190,7 +190,7 @@ namespace TerminalBibliotek
                     "SELECT Id FROM Authors WHERE Name = @Name",
                     new { Name = authorName });
                 var book = connection.QueryFirstOrDefault<Book>(
-                    "INSERT INTO Books (Name) VALUES (@Name);",
+                    "SELECT Id FROM Books WHERE Name = @Name;",
                     new { Name = bookTitle });
                 if (author == null)
                     {
@@ -206,6 +206,7 @@ namespace TerminalBibliotek
                 connection.Execute(
                     "INSERT INTO Library (AuthorId, BookId) VALUES (@AuthorId, @BookId)",
                     new { AuthorId = author.Id, BookId = book.Id });
+                
             }
         }
         public class Author
