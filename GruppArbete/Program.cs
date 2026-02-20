@@ -11,8 +11,18 @@ namespace TerminalBibliotek
             using var connection = new SqlConnection("Server=localhost,1433;Database=Exempel; User ID=sa;Password=Lösenord!;Encrypt=True;TrustServerCertificate=True;");
             connection.Open();
 
-            connection.Execute("INSERT INTO ducks(name) VALUES('Prov Anka')");
-            connection.Query<string>("SELECT name FROM ducks");
+            connection.Execute(@"
+IF NOT EXISTS (
+SELECT 1 FROM sys.tables WHERE name = 'Authors'
+)
+BEGIN
+CREATE TABLE Authors (
+    Id INT PRIMARY KEY IDENTITY,
+    Name NVARCHAR(100) NOT NULL
+);
+END
+");
+            connection.Query<string>("SELECT Name FROM Authors");
 
         }
     }
