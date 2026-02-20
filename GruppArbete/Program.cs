@@ -12,16 +12,14 @@ namespace TerminalBibliotek
             connection.Open();
 
             connection.Execute(@"
-IF NOT EXISTS (
-SELECT 1 FROM sys.tables WHERE name = 'Authors'
-)
-BEGIN
-CREATE TABLE Authors (
-    Id INT PRIMARY KEY IDENTITY,
-    Name NVARCHAR(100) NOT NULL
-);
-END
-");
+                    IF NOT EXISTS 
+                        (SELECT 1 FROM sys.tables WHERE name = 'Authors')
+                           BEGIN
+                               CREATE TABLE Authors (
+                                      Id INT IDENTITY(1,1) PRIMARY KEY,
+                                      Name NVARCHAR(100) NOT NULL
+                        );
+                        END");
             connection.Query<string>("SELECT Name FROM Authors");
 
         }
