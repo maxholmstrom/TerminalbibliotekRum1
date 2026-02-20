@@ -122,6 +122,37 @@ namespace TerminalBibliotek
 
 
 
+
+
+
+
+
+            else if (args.Length == 3 &&
+                (args[0].Equals("delete", StringComparison.OrdinalIgnoreCase) ||
+                 args[0].Equals("d", StringComparison.OrdinalIgnoreCase)) &&
+                (args[1].Equals("author", StringComparison.OrdinalIgnoreCase) ||
+                 args[1].Equals("a", StringComparison.OrdinalIgnoreCase)))
+            {
+                var authorName = args[2];
+
+                var rowsAffected = connection.Execute(
+                    "DELETE FROM Authors WHERE Name = @Name",
+                    new { Name = authorName });
+
+                if (rowsAffected == 0)
+                {
+                    Console.WriteLine("Ingen författare hittades.");
+                }
+                else
+                {
+                    Console.WriteLine("Författare borttagen.");
+                }
+            }
+
+
+
+
+
         }
         public class Author
         {
