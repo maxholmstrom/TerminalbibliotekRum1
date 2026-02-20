@@ -33,7 +33,7 @@ namespace TerminalBibliotek
                                       
                         );
                         END");
-
+            
             connection.Execute(@"
            IF NOT EXISTS 
                  (SELECT 1 FROM sys.tables WHERE name = 'Library')
@@ -84,6 +84,38 @@ namespace TerminalBibliotek
                 foreach (var author in authors)
                 {
                     Console.WriteLine($"- {author.Name} (ID: {author.Id})");
+                }
+            }
+
+            else if (args.Length == 3 &&
+                    (args[0].Equals("list", StringComparison.OrdinalIgnoreCase) ||
+                    args[0].Equals("l", StringComparison.OrdinalIgnoreCase)) &&
+                    (args[1].Equals("authors", StringComparison.OrdinalIgnoreCase) ||
+                    args[1].Equals("author", StringComparison.OrdinalIgnoreCase) ||
+                    args[1].Equals("a", StringComparison.OrdinalIgnoreCase)) &&
+                    ((args[2].Equals("--books", StringComparison.OrdinalIgnoreCase)) ||
+                    args[2].Equals("-b", StringComparison.OrdinalIgnoreCase)))
+            {
+                var lists = connection.Query<AuthorBook>(@"
+                    SELECT 
+                                Authors.Name AS AuthorName, 
+                                Books.Name AS BookName
+                                    FROM  Library 
+                    JOIN Authors ON Authors.Id = Library.AuthorId
+                    JOIN Books ON Books.Id = Library.BookId").ToList();
+
+                if (lists.Count == 0)
+                {
+                    Console.WriteLine("Inga författare hittades.");
+                    return;
+                }
+
+                var gruperadList = lists.GroupBy(x => x.AuthorName);
+                foreach (var author in gruperadList)
+                {
+                    Console.WriteLine($"{author.Key}: ");
+                    foreach(var books in author)
+                    { Console.WriteLine($" - {books.BookName}"); }
                 }
             }
 
@@ -208,6 +240,8 @@ namespace TerminalBibliotek
                     new { AuthorId = author.Id, BookId = book.Id });
                 
             }
+
+
         }
         public class Author
         {
@@ -219,6 +253,12 @@ namespace TerminalBibliotek
         {
             public int Id { get; set; }
             public string Name { get; set; } = "";
+        }
+
+        public class AuthorBook
+        {
+            public string AuthorName { get; set; } = "";
+            public string BookName { get; set; } = "";
         }
     }
 }
