@@ -240,6 +240,44 @@ namespace TerminalBibliotek
                     new { AuthorId = author.Id, BookId = book.Id });
                 
             }
+            // Ta bort bok från författare
+            else if (args.Length == 6 &&
+                (args[0].Equals("modify", StringComparison.OrdinalIgnoreCase) ||
+                 args[0].Equals("m", StringComparison.OrdinalIgnoreCase)) &&
+                (args[1].Equals("author", StringComparison.OrdinalIgnoreCase) ||
+                 args[1].Equals("a", StringComparison.OrdinalIgnoreCase)) &&
+                (args[3].Equals("remove", StringComparison.OrdinalIgnoreCase) ||
+                 args[3].Equals("r", StringComparison.OrdinalIgnoreCase)) &&
+                (args[4].Equals("book", StringComparison.OrdinalIgnoreCase) ||
+                 args[4].Equals("b", StringComparison.OrdinalIgnoreCase)))
+            {
+                string authorName = args[2];
+                string bookTitle = args[5];
+
+                var author = connection.QueryFirstOrDefault<Author>(
+                    "SELECT Id FROM Authors WHERE Name = @Name",
+                    new { Name = authorName });
+                var book = connection.QueryFirstOrDefault<Book>(
+                    "SELECT Id FROM Books WHERE Name = @Name;",
+                    new { Name = bookTitle });
+                if (author == null)
+                {
+                    Console.WriteLine("Författaren hittades inte.");
+                    return;
+                }
+                if (book == null)
+                {
+                    Console.WriteLine("Boken hittades inte.");
+                    return;
+                }
+                connection.Execute(
+                    "DELETE FROM Library WHERE AuthorId = @AuthorId AND BookId = @BookId",
+                    new { AuthorId = author.Id, BookId = book.Id });
+            }
+            else
+            {
+                Console.WriteLine("Ogiltigt kommando eller argument.");
+            }
 
 
         }
