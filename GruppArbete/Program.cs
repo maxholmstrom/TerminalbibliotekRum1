@@ -39,10 +39,8 @@ namespace TerminalBibliotek
                  (SELECT 1 FROM sys.tables WHERE name = 'Library')
     
                    CREATE TABLE Library (
-                           Id INT IDENTITY(1,1) PRIMARY KEY,
                            AuthorId INT NOT NULL,
                            BookId INT NOT NULL,
-                           PRIMARY KEY (AuthorId, BookId),
                            FOREIGN KEY (AuthorId) REFERENCES Authors(Id),
                            FOREIGN KEY (BookId) REFERENCES Books(Id));");
 
