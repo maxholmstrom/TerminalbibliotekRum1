@@ -119,6 +119,39 @@ namespace TerminalBibliotek
                 }
             }
 
+
+            else if (args.Length == 3 &&
+                    (args[0].Equals("list", StringComparison.OrdinalIgnoreCase) ||
+                    args[0].Equals("l", StringComparison.OrdinalIgnoreCase)) &&
+                    (args[1].Equals("books", StringComparison.OrdinalIgnoreCase) ||
+                    args[1].Equals("book", StringComparison.OrdinalIgnoreCase) ||
+                    args[1].Equals("b", StringComparison.OrdinalIgnoreCase)) &&
+                    ((args[2].Equals("--authors", StringComparison.OrdinalIgnoreCase)) ||
+                    args[2].Equals("-a", StringComparison.OrdinalIgnoreCase)))
+            {
+                var lists = connection.Query<AuthorBook>(@"
+                    SELECT 
+                                Authors.Name AS AuthorName, 
+                                Books.Name AS BookName
+                                    FROM  Library 
+                    JOIN Authors ON Authors.Id = Library.AuthorId
+                    JOIN Books ON Books.Id = Library.BookId").ToList();
+
+                if (lists.Count == 0)
+                {
+                    Console.WriteLine("Inga författare hittades.");
+                    return;
+                }
+
+                var gruperadList = lists.GroupBy(x => x.BookName);
+                foreach (var book in gruperadList)
+                {
+                    Console.WriteLine($"{book.Key}: ");
+                    foreach (var author in book)
+                    { Console.WriteLine($" - {author.AuthorName}"); }
+                }
+            }
+
             if (args.Length >= 3 &&
                 (args[0].Equals("add", StringComparison.OrdinalIgnoreCase) ||
                 args[0].Equals("a", StringComparison.OrdinalIgnoreCase)) &&
