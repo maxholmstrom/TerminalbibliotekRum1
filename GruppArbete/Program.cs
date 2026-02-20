@@ -34,6 +34,19 @@ namespace TerminalBibliotek
                         );
                         END");
 
+            connection.Execute(@"
+           IF NOT EXISTS 
+           (SELECT 1 FROM sys.tables WHERE name = 'Library')
+    
+        CREATE TABLE Library (
+            AuthorId INT NOT NULL,
+            BookId INT NOT NULL,
+            PRIMARY KEY (AuthorId, BookId),
+            FOREIGN KEY (AuthorId) REFERENCES Authors(Id),
+            FOREIGN KEY (BookId) REFERENCES Books(Id)       
+    
+);");
+
             if (args.Length >= 3 &&
                 (args[0].Equals("add", StringComparison.OrdinalIgnoreCase) ||
                 args[0].Equals("a", StringComparison.OrdinalIgnoreCase)) &&
@@ -161,19 +174,7 @@ namespace TerminalBibliotek
                 {
                     Console.WriteLine("Bok borttagen.");
                 }
-            }
-            connection.Execute(@"
-           IF NOT EXISTS 
-           (SELECT 1 FROM sys.tables WHERE name = 'Library')
-    
-        CREATE TABLE Library (
-            AuthorId INT NOT NULL,
-            BookId INT NOT NULL,
-            PRIMARY KEY (AuthorId, BookId),
-            FOREIGN KEY (AuthorId) REFERENCES Authors(Id),
-            FOREIGN KEY (BookId) REFERENCES Books(Id)       
-    
-);");       
+            }     
 
         }
         public class Author
